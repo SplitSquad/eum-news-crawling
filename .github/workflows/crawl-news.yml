@@ -1,0 +1,40 @@
+name: Crawl News
+
+on:
+  schedule:
+    - cron: '0 23 * * *'
+  workflow_dispatch:
+
+jobs:
+  crawl:
+    runs-on: ubuntu-latest
+    
+    permissions:
+      contents: write
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: Run crawler
+      run: python scrape_kdx.py
+
+    - name: Commit and push if changes
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add .
+        git diff --quiet && git diff --stages --quiet || (git commit -m "Update crawled data")
+    - name: Push changes
+      run: |
+        git push https://x-access-token:${{secrets.GITHUB_TOKEN}}@github.com/SplitSquad/eum-news-crawling.git
+
