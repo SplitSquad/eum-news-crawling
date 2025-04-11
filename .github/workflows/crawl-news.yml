@@ -8,7 +8,9 @@ on:
 jobs:
   crawl:
     runs-on: ubuntu-latest
-    
+    env:
+      NAVER_CLIENT_ID: ${{ secrets.NAVER_CLIENT_ID }}
+      NAVER_CLIENT_SECRET: ${{ secrets.NAVER_CLIENT_SECRET }}
     permissions:
       contents: write
 
