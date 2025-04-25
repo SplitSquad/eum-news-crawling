@@ -2,7 +2,7 @@ name: Crawl News
 
 on:
   schedule:
-    - cron: '0 23 * * *'
+    - cron: '0 23,5,11 * * *'
   workflow_dispatch:
 
 jobs:
@@ -28,7 +28,7 @@ jobs:
         pip install -r requirements.txt
 
     - name: Run crawler
-      run: python scrape_kdx.py
+      run: python scrap_kdx_main.py
 
     - name: Commit and push if changes
       run: |
