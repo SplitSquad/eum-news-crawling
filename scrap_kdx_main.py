@@ -73,13 +73,9 @@ def crawl_real_time_trend_keyword():
 def crawl_articles_by_keyword(keywords):
     # 크롤링 한 키워드 기반 뉴스 검색
 
-    client_id = "mXz64Bl6y1Y4SX6pQM7F"
-    client_secret = "uGur1xeVED"
+    client_id = os.environ.get('NAVER_CLIENT_ID')
+    client_secret = os.environ.get('NAVER_CLIENT_SECRET')
     responses = {}
-    
-    # client_id = os.environ.get('NAVER_CLIENT_ID')
-    # client_secret = os.environ.get('NAVER_CLIENT_SECRET')
-    # responses = {}
     today = datetime.datetime.now()
     # 각 키워드별 뉴스 검색 결과 저장
     for result in keywords:
