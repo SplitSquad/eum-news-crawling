@@ -235,7 +235,8 @@ def crawl_each_article_at_articles(article_list):
             # 키워드별 뉴스 기사 저장
             if keyword not in results:
                 results[keyword] = []
-            results[keyword].append(result)
+            if result != null:
+                results[keyword].append(result)
     with open(f'crawled_news/naver_news_article_{today}.json', 'w', encoding='utf-8') as f:
         json.dump(results, f, ensure_ascii=False, indent=2)
     print(f"\n결과가 naver_news_article_{today}.json 파일에 저장되었습니다.")
