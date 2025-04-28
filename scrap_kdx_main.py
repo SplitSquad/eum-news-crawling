@@ -222,6 +222,7 @@ def crawl_each_article_at_articles(article_list):
     today = datetime.datetime.now()
     results = {}
     for keyword, articles in article_list.items():
+        result = {}
         for article in articles['items']:
             url = article['link']
             # 특정 뉴스기사 크롤링
