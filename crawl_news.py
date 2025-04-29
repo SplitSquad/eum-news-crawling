@@ -12,7 +12,8 @@ import sys
 import urllib.request
 import re
 import datetime
-
+from debate_content_request import request_create_debate
+from create_debate import post_debate
 load_dotenv()
 
 # 실시간 인기 검색어 크롤링
@@ -212,14 +213,15 @@ def crawling_naver_entertain_news(url):
         # 브라우저 종료
         driver.quit()
 
+# 네이버뉴스 api에서 받아온 뉴스 리스트에서 각 뉴스 크롤링
 def crawl_each_article_at_articles(article_list):
-    # 네이버뉴스 api에서 받아온 뉴스 리스트에서 각 뉴스 크롤링
     # article_list 에서 뉴스 링크추출
     today = datetime.datetime.now()
     results = {}
     for keyword, articles in article_list.items():
-        result = {}
+        temp_result = {}
         for article in articles['items']:
+            result = {}
             url = article['link']
             # 특정 뉴스기사 크롤링
             if 'news.naver' in url:
@@ -232,13 +234,26 @@ def crawl_each_article_at_articles(article_list):
             # 키워드별 뉴스 기사 저장
             if keyword not in results:
                 results[keyword] = []
-            if result != null:
-                results[keyword].append(result)
+                temp_result[keyword] = []
+            if result:
+                temp_result[keyword].append(result)
+
+        # ##### 토론주제 생성
+        # response = request_create_debate(temp_result[keyword])
+        # ##### 토론글 생성
+        # post_debate_request = {
+        #     "title": f"{response["discussion"]["title"]}",
+        #     "content": f"{response["discussion"]["content"]} \n\n{response["discussion"]["vote"]}",
+        #     "category": f"{response["discussion"]["category"]}"
+        # }
+        # post_debate(post_debate_request)
+        results[keyword].append(temp_result[keyword])
+
     with open(f'crawled_news/naver_news_article_{today}.json', 'w', encoding='utf-8') as f:
         json.dump(results, f, ensure_ascii=False, indent=2)
     print(f"\n결과가 naver_news_article_{today}.json 파일에 저장되었습니다.")
 
-# 크롤링 뉴스
+# 뉴스 크롤링 및 토론글생성
 def crawling_news():
     keywords = crawl_real_time_trend_keyword()
     article_list = crawl_articles_by_keyword(keywords)
