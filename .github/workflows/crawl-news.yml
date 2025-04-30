@@ -28,7 +28,7 @@ jobs:
         pip install -r requirements.txt
 
     - name: Run crawler
-      run: python scrap_kdx_main.py
+      run: python crawl_news.py
 
     - name: Commit and push if changes
       run: |
