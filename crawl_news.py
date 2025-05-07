@@ -4,11 +4,10 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.options import Options
 from dotenv import load_dotenv
-import time
 from bs4 import BeautifulSoup
+from urllib.parse import urlparse
 import json
 import os
-import sys
 import urllib.request
 import re
 import datetime
@@ -223,12 +222,13 @@ def crawl_each_article_at_articles(article_list):
         for article in articles['items']:
             result = {}
             url = article['link']
+            netloc = urlparse(url).netloc
             # 특정 뉴스기사 크롤링
-            if 'news.naver' in url:
+            if 'news.naver' in netloc:
                 result = crawling_naver_news(url)
-            elif 'sports.naver' in url:
+            elif 'sports.naver' in netloc:
                 result = crawling_naver_sports_news(url)
-            elif 'entertain.naver' in url:
+            elif 'entertain.naver' in netloc:
                 result = crawling_naver_entertain_news(url)
 
             # 키워드별 뉴스 기사 저장
@@ -247,7 +247,9 @@ def crawl_each_article_at_articles(article_list):
         #     "category": f"{response["discussion"]["category"]}"
         # }
         # post_debate(post_debate_request)
-        results[keyword].append(temp_result[keyword])
+
+        if temp_result is not None:
+            results[keyword].append(temp_result[keyword])
 
     with open(f'crawled_news/naver_news_article_{today}.json', 'w', encoding='utf-8') as f:
         json.dump(results, f, ensure_ascii=False, indent=2)
