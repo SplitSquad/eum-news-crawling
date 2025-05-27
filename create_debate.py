@@ -18,6 +18,7 @@ def post_debate(data):
     logging.info(f"post_debate_api_url: {url}")
     DEBATE_SECRET = os.environ.get('DEBATE_SECRET')
     data = json.dumps(data).encode('utf-8')
+    print("\n\nDebate-Service api 호출: " + url)
     req = urllib.request.Request(url,
                                  data=data,
                                  headers={

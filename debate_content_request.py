@@ -26,6 +26,7 @@ import os
 def request_create_debate(data):
     url = os.environ.get('EUM_DISCUSSION_ROOM_URI')
     data = json.dumps(data).encode('utf-8')
+    print("Dicussion-Room-Service api 호출: " + url)
     req = urllib.request.Request(url,
                                  data=data,
                                  headers={
