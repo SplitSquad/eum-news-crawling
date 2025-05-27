@@ -25,12 +25,14 @@ import os
 # AI 서비스에서 토론글생성 api를 호출한다
 def request_create_debate(data):
     url = os.environ.get('EUM_DISCUSSION_ROOM_URI')
+    DEBATE_SECRET = os.environ.get('DEBATE_SECRET')
     data = json.dumps(data).encode('utf-8')
     print("Dicussion-Room-Service api 호출: " + url)
     req = urllib.request.Request(url,
                                  data=data,
                                  headers={
-                                     'Content-Type': 'application/json'
+                                     'Content-Type': 'application/json',
+                                     'Debate': DEBATE_SECRET
                                      }, method='POST')
     
     try:
