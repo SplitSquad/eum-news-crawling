@@ -11,6 +11,9 @@ jobs:
     env:
       NAVER_CLIENT_ID: ${{ secrets.NAVER_CLIENT_ID }}
       NAVER_CLIENT_SECRET: ${{ secrets.NAVER_CLIENT_SECRET }}
+      EUM_DISCUSSION_ROOM_URI: ${{secrets.EUM_DISCUSSION_ROOM_URI}}
+      EUM_DEBATE_SERVICE_URI: ${{secrets.EUM_DEBATE_SERVICE_URI}}
+      DEBATE_SECRET: ${{secrets.DEBATE_SECRET}}
     permissions:
       contents: write
 
