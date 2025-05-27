@@ -256,9 +256,9 @@ def crawl_each_article_at_articles(article_list):
 #############################################################################################
         ##### 토론글 생성
         post_debate_request = {
-            "title": f"{response["discussion"]["title"]}",
-            "content": f"{response["discussion"]["content"]} \n\n토론주제: {response["discussion"]["vote"]}\n찬성측의견: {response["discussion"]["positive"]}\n반대측의견: {response["discussion"]["negative"]}",
-            "category": f"{response["discussion"]["category"]}"
+            "title": f"{response['discussion']['title']}",
+            "content": f"{response['discussion']['content']} \n\n토론주제: {response['discussion']['vote']}\n찬성측의견: {response['discussion']['positive']}\n반대측의견: {response['discussion']['negative']}",
+            "category": f"{response['discussion']['category']}"
         }
         logging.info(f"토론글생성 api data: {post_debate_request}")
 
