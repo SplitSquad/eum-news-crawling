@@ -242,28 +242,32 @@ def crawl_each_article_at_articles(article_list):
         ##### 토론주제 생성
         # response = request_create_debate(temp_result[keyword])
         
+        print(temp_result[keyword])
         ###### 테스팅 하고 위에걸로 변경
         temp_temp_result = {}
-        temp_temp_result[keyword] = []
-        temp_temp_result[keyword].append(temp_result[keyword][0])
-        print("\n\n토론글 생성 입력데이터: ")
-        print(temp_temp_result[keyword])
-        response = request_create_debate(temp_temp_result[keyword])
+        # temp_temp_result[keyword] = []
+        # temp_temp_result[keyword].append(temp_result[keyword])
+        temp_temp_result[keyword] = temp_result[keyword]
+
+        if temp_temp_result.get(keyword) and len(temp_temp_result[keyword]) > 0:
+            print("\n\n토론글 생성 입력데이터: ")
+            print(temp_temp_result[keyword][0])
+            response = request_create_debate([temp_temp_result[keyword][0]])
         
-        print("\n토론글 생성 출력데이터: ")
-        print(response)
+            print("\n토론글 생성 출력데이터: ")
+            print(response)
 
 #############################################################################################
-        ##### 토론글 생성
-        post_debate_request = {
-            "title": f"{response['discussion']['title']}",
-            "content": f"{response['discussion']['content']} \n\n토론주제: {response['discussion']['vote']}\n찬성측의견: {response['discussion']['positive']}\n반대측의견: {response['discussion']['negative']}",
-            "category": f"{response['discussion']['category']}"
-        }
-        logging.info(f"토론글생성 api data: {post_debate_request}")
+            ##### 토론글 생성
+            post_debate_request = {
+                "title": f"{response['discussion']['title']}",
+                "content": f"{response['discussion']['content']} \n\n토론주제: {response['discussion']['vote']}\n찬성측의견: {response['discussion']['positive']}\n반대측의견: {response['discussion']['negative']}",
+                "category": f"{response['discussion']['category']}"
+            }
+            logging.info(f"토론글생성 api data: {post_debate_request}")
 
-        post_debate(post_debate_request)
-        logging.info("post_dabate api call success!")
+            post_debate(post_debate_request)
+            logging.info("post_dabate api call success!")
         if temp_result is not None:
             results[keyword].append(temp_result[keyword])
 
