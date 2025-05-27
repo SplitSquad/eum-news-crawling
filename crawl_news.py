@@ -6,6 +6,7 @@ from selenium.webdriver.chrome.options import Options
 from dotenv import load_dotenv
 from bs4 import BeautifulSoup
 from urllib.parse import urlparse
+import logging
 import json
 import os
 import urllib.request
@@ -63,7 +64,7 @@ def crawl_real_time_trend_keyword():
 
     with open(f'keyword_list/keyword_list_{today}.json', 'w', encoding='utf-8') as f:
         json.dump(results, f, ensure_ascii=False, indent=2)
-    print(f"\n결과가 keyword_list_{today}.json 파일에 저장되었습니다.")
+    logging.info(f"\n결과가 keyword_list_{today}.json 파일에 저장되었습니다.")
 
     # 출력 확인
     return results
@@ -90,11 +91,11 @@ def crawl_articles_by_keyword(keywords):
             response_body = response.read()
             responses[f"{result['keyword']}"] = json.loads(response_body.decode('utf-8'))
         else:
-            print("Error Code:" + rescode)
+            logging.error("Error Code: " + rescode)
         # 결과 JSON 파일로 저장
     with open(f'newslist/newslist_by_keyword_{today}.json', 'w', encoding='utf-8') as f:
         json.dump(responses, f, ensure_ascii=False, indent=2)
-    print(f"\n결과가 newslist_by_keyword_{today}.json 파일에 저장되었습니다.")
+    logging.info(f"\n결과가 newslist_by_keyword_{today}.json 파일에 저장되었습니다.")
     return responses
 
 
@@ -131,7 +132,7 @@ def crawling_naver_news(url):
             }
             return result
     except Exception as e:
-        print(f"에러 발생: {str(e)}")
+        logging.info(f"에러 발생: {str(e)}")
     finally:
         # 브라우저 종료
         driver.quit()
@@ -169,7 +170,7 @@ def crawling_naver_sports_news(url):
             }
             return result
     except Exception as e:
-        print(f"에러 발생: {str(e)}")
+        logging.error(f"에러 발생: {str(e)}")
     finally:
         # 브라우저 종료
         driver.quit()
@@ -207,7 +208,7 @@ def crawling_naver_entertain_news(url):
             }
             return result
     except Exception as e:
-        print(f"에러 발생: {str(e)}")
+        logging.info(f"에러 발생: {str(e)}")
     finally:
         # 브라우저 종료
         driver.quit()
@@ -237,26 +238,42 @@ def crawl_each_article_at_articles(article_list):
                 temp_result[keyword] = []
             if result:
                 temp_result[keyword].append(result)
-
-        # ##### 토론주제 생성
+#############################################################################################
+        ##### 토론주제 생성
         # response = request_create_debate(temp_result[keyword])
-        # ##### 토론글 생성
-        # post_debate_request = {
-        #     "title": f"{response["discussion"]["title"]}",
-        #     "content": f"{response["discussion"]["content"]} \n\n{response["discussion"]["vote"]}",
-        #     "category": f"{response["discussion"]["category"]}"
-        # }
-        # post_debate(post_debate_request)
+        
+        ###### 테스팅 하고 위에걸로 변경
+        temp_temp_result = {}
+        temp_temp_result[keyword] = []
+        temp_temp_result[keyword].append(temp_result[keyword][0])
+        print("\n\n토론글 생성 입력데이터: ")
+        print(temp_temp_result[keyword])
+        response = request_create_debate(temp_temp_result[keyword])
+        
+        print("\n토론글 생성 출력데이터: ")
+        print(response)
 
+#############################################################################################
+        ##### 토론글 생성
+        post_debate_request = {
+            "title": f"{response["discussion"]["title"]}",
+            "content": f"{response["discussion"]["content"]} \n\n토론주제: {response["discussion"]["vote"]}\n찬성측의견: {response["discussion"]["positive"]}\n반대측의견: {response["discussion"]["negative"]}",
+            "category": f"{response["discussion"]["category"]}"
+        }
+        logging.info(f"토론글생성 api data: {post_debate_request}")
+
+        post_debate(post_debate_request)
+        logging.info("post_dabate api call success!")
         if temp_result is not None:
             results[keyword].append(temp_result[keyword])
 
     with open(f'crawled_news/naver_news_article_{today}.json', 'w', encoding='utf-8') as f:
         json.dump(results, f, ensure_ascii=False, indent=2)
-    print(f"\n결과가 naver_news_article_{today}.json 파일에 저장되었습니다.")
+    logging.info(f"\n결과가 naver_news_article_{today}.json 파일에 저장되었습니다.")
 
 # 뉴스 크롤링 및 토론글생성
 def crawling_news():
+    logging.basicConfig(filename='crawl_news.log', level=logging.INFO)
     keywords = crawl_real_time_trend_keyword()
     article_list = crawl_articles_by_keyword(keywords)
     crawl_each_article_at_articles(article_list)
