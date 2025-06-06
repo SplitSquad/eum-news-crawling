@@ -39,6 +39,7 @@ def request_create_debate(data):
         with urllib.request.urlopen(req) as response:
             result = response.read()
             content = json.loads(result)
+            print("\nDiscussion Room Service API 반환값: " + content)
         return content
     except urllib.error.HTTPError as e:
         error_message = e.read().decode()

@@ -250,11 +250,11 @@ def crawl_each_article_at_articles(article_list):
         temp_temp_result[keyword] = temp_result[keyword]
 
         if temp_temp_result.get(keyword) and len(temp_temp_result[keyword]) > 0:
-            print("\n\n토론글 생성 입력데이터: ")
+            print("\n토론글 생성 입력데이터: ")
             print(temp_temp_result[keyword][0])
             response = request_create_debate([temp_temp_result[keyword][0]])
         
-            print("\n토론글 생성 출력데이터: ")
+            print("\n생성된 토론글: ")
             print(response)
 
 #############################################################################################
